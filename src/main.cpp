@@ -5,16 +5,30 @@
 #include <VulkanWindow.h>
 #include <Containers/Container.h>
 #include <Containers/UI/ContainerListWindow.h>
+#include "Containers/ContainerManager.h"
+
+using namespace nlohmann;
+
 int main() {
-    WindowProperties properties =  WindowProperties(1920, 1080, "Docker-ImGui-Test-Window, Vulkan!", ImVec4(0.45f, 0.55f, 0.60f, 1.00f));
+    KBUI::Properties::WindowProperties properties = KBUI::Properties::WindowProperties(1920, 1080,
+                                                                                       "Docker-ImGui-Test-Window, Vulkan!",
+                                                                                       ImVec4(0.45f, 0.55f, 0.60f,
+                                                                                              1.00f));
     KBUI::VulkanWindow mainWindow(properties);
-    const KBDocker::Container container("Container 1");
-    while(!mainWindow.ShouldClose()){
+    KBDocker::Containers::ContainerManager containerManager("localhost", 1);
+
+
+    while (!mainWindow.ShouldClose()) {
+
+        containerManager.Refresh();
+        std::vector<KBDocker::Container> containers = containerManager.GetContainers();
+
         mainWindow.StartFrame();
 
-        KBDocker::ContainerListWindow::Begin(container);
-        KBDocker::ContainerListWindow::End();
+        ImGui::ShowDemoWindow();
 
+        KBDocker::UI::ContainerListWindow::Begin(containers);
+        KBDocker::UI::ContainerListWindow::End();
         mainWindow.EndFrame();
     }
     return 0;

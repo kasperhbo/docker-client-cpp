@@ -13,7 +13,10 @@ set(EXE_NAME ${PROJECT_NAME}-EXE)
 
 set(SOURCES
         src/private/Containers/Container.cpp
+        src/private/Containers/ContainerManager.cpp
         src/private/Containers/UI/ContainerListWindow.cpp
+        src/private/Containers/UI/ContainerWindow.cpp
+        src/private/ApiRequester.cpp
 )
 
 set(PRIVATE_HEADERS
@@ -21,7 +24,6 @@ set(PRIVATE_HEADERS
 )
 
 set(PUBLIC_HEADERS
-        src/public/Containers/UI/ContainerListWindow.h
 )
 
 add_library(
@@ -36,12 +38,29 @@ target_include_directories(
 
 
 #libraries
+#kbui
 set(KBUI_DIR ../kbui)
 add_subdirectory(${KBUI_DIR} binary_dir EXCLUDE_FROM_ALL)
 target_link_libraries(
         ${LIB_NAME} PUBLIC
         KBUI
 )
+#nlohmann json
+set(JSON_DIR vendor/nlohmann-json)
+add_subdirectory(${JSON_DIR})
+target_link_libraries(
+        ${LIB_NAME} PUBLIC
+        nlohmann_json::nlohmann_json
+)
+
+#curl
+find_package(CURL REQUIRED)
+target_link_libraries(
+        ${LIB_NAME} PUBLIC
+        CURL::libcurl
+)
+
+#nana
 
 #executable for testing
 add_executable(
