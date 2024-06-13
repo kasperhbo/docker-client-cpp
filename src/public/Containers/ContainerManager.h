@@ -8,18 +8,30 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <thread>
 #include "Containers/Container.h"
 
 namespace KBDocker::Containers {
 
     class ContainerManager {
     public:
-        explicit ContainerManager(std::string ip, float refreshInterval = 1.0f) : m_Ip(std::move(ip)),
-                                                                                  m_RefreshInterval(refreshInterval) {}
+        explicit ContainerManager(std::string ip, int refreshInterval = 1) : m_Ip(std::move(ip)),
+                                                                             m_IntervalSeconds(refreshInterval),
+                                                                             m_Running(false) {
+            Start();
+        }
 
-        ~ContainerManager() = default;
+        void Stop();
+
+        ~ContainerManager(){
+            if(m_Running.load())
+                Stop();
+        }
 
     public:
+
+        void Start();
+
         void Refresh();
 
         [[nodiscard]]std::vector<Container> GetContainers() const {
@@ -31,16 +43,18 @@ namespace KBDocker::Containers {
         }
 
     private:
-        void FetchContainersFromAPI() const;
-
-    public:
-        std::string m_Ip;
-        const float m_RefreshInterval = 1.0f;
-
-        std::vector<Container> m_Containers = {};
+        std::vector<Container> FetchContainersFromAPI() const;
 
     private:
+        std::string m_Ip;
+        int m_IntervalSeconds;
+        std::vector<Container> m_Containers{};
+        std::atomic<bool> m_Running{};
+        std::thread m_Thread;
+
         inline static std::string s_containerUrl = "/container";
+
+
     };
 
 } // Containers

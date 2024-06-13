@@ -7,28 +7,33 @@
 
 
 namespace KBDocker::UI {
-    void ContainerWindow::Begin(const Container &container, bool isChild) {
-        if(isChild)
-            ImGui::BeginChild(container.GetID().c_str());
+    void ContainerWindow::Begin(const Container *container, bool isChild) {
+        if (container == nullptr) { return; }
+        if (container->GetID().empty() || container->GetID() == "" || container->GetName().empty()) { return; }
+
+        if (isChild)
+            ImGui::BeginChild(container->GetID().c_str());
         else
-            ImGui::Begin(container.GetID().c_str());
+            ImGui::Begin(container->GetID().c_str());
 
 
-        ImGui::Text("ID: %s", container.GetID().c_str());
-        ImGui::Text("Name: %s", container.GetName().c_str());
-        ImGui::Text("Image: %s", container.GetImage().c_str());
-        ImGui::Text("Status: %s", container.GetStatus().c_str());
+        ImGui::Text("ID: %s", container->GetID().c_str());
+        ImGui::Text("Name: %s", container->GetName().c_str());
+        ImGui::Text("Image: %s", container->GetImage().c_str());
+        ImGui::Text("Status: %s", container->GetStatus().c_str());
 
         // Add color to the state display
         std::string stateStr = "Unknown";
         ImVec4 color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // Default to white
-        switch (container.GetState()) {
-            case Container::State::Running: stateStr = "Running";
-            color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f); // Green
-            break;
-            case Container::State::Stopped: stateStr = "Stopped";
-            color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // Red
-            break;
+        switch (container->GetState()) {
+            case Container::State::Running:
+                stateStr = "Running";
+                color = ImVec4(0.0f, 1.0f, 0.0f, 1.0f); // Green
+                break;
+            case Container::State::Stopped:
+                stateStr = "Stopped";
+                color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); // Red
+                break;
                 // Add other cases with corresponding colors
             case Container::State::Paused:
                 stateStr = "Paused";
@@ -57,10 +62,11 @@ namespace KBDocker::UI {
         }
         ImGui::TextColored(color, "State: %s", stateStr.c_str());
 
-        if(isChild)
+        if (isChild)
             ImGui::EndChild();
         else
             ImGui::End();
     }
+
 } // UI
 // KBDocker

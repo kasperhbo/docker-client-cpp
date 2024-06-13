@@ -60,7 +60,8 @@ namespace KBDocker::UI {
         ImGui::NextColumn();
 //        ImGui::BeginChild("ContainerDetails", ImVec2(0, 0), true); // Adjust size as needed
         if (selectedIdx != -1) {
-            ContainerWindow::Begin(containers[selectedIdx], true);
+            if(selectedIdx < containers.size())
+                ContainerWindow::Begin(&containers[selectedIdx], true);
         }
 //        ImGui::EndChild(); // End right panel
 

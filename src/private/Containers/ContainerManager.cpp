@@ -11,6 +11,26 @@ namespace KBDocker::Containers {
     void ContainerManager::Refresh() {
         m_Containers = FetchContainersFromAPI();
     }
+    void ContainerManager::Start() {
+        if (m_Running.load()) return;
+
+        m_Running.store(true);
+        m_Thread = std::thread([this]() {
+            while (m_Running.load()) {
+                Refresh();
+                std::this_thread::sleep_for(std::chrono::seconds(m_IntervalSeconds));
+            }
+        });
+    }
+
+    void ContainerManager::Stop() {
+        if (!m_Running.load()) return;
+
+        m_Running.store(false);
+        if (m_Thread.joinable()) {
+            m_Thread.join();
+        }
+    }
 
     std::vector<Container> ContainerManager::FetchContainersFromAPI() const {
         const std::string jsonString = ApiRequester::Get(GetIp(), s_containerUrl + "/list");
@@ -28,6 +48,5 @@ namespace KBDocker::Containers {
 
         return containers;
     }
-
 } // Containers
 // KBDocker

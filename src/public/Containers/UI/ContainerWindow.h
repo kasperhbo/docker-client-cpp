@@ -12,7 +12,7 @@ namespace KBDocker::UI {
 
     class ContainerWindow {
     public:
-        static void Begin(const Container &container, bool isChild = false);
+        static void Begin(const Container* container, bool isChild = false);
     };
 
 } // UI
