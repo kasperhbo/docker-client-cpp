@@ -15,7 +15,7 @@ namespace KBDocker::Containers {
 
     class ContainerManager {
     public:
-        explicit ContainerManager(std::string ip, int refreshInterval = 1) : m_Ip(std::move(ip)),
+        explicit ContainerManager(std::string ip, int refreshInterval = 5) : m_Ip(std::move(ip)),
                                                                              m_IntervalSeconds(refreshInterval),
                                                                              m_Running(false) {
             Start();

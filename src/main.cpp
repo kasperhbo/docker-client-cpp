@@ -19,15 +19,11 @@ int main() {
 
 
     while (!mainWindow.ShouldClose()) {
-
-        containerManager.Refresh();
-        std::vector<KBDocker::Container> containers = containerManager.GetContainers();
-
         mainWindow.StartFrame();
 
         ImGui::ShowDemoWindow();
 
-        KBDocker::UI::ContainerListWindow::Begin(containers);
+        KBDocker::UI::ContainerListWindow::Begin(containerManager.GetContainers());
         KBDocker::UI::ContainerListWindow::End();
         mainWindow.EndFrame();
     }

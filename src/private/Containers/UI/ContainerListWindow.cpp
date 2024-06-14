@@ -58,12 +58,10 @@ namespace KBDocker::UI {
 
         // Right panel for showing selected container details
         ImGui::NextColumn();
-//        ImGui::BeginChild("ContainerDetails", ImVec2(0, 0), true); // Adjust size as needed
         if (selectedIdx != -1) {
-            if(selectedIdx < containers.size())
+            if (selectedIdx < containers.size())
                 ContainerWindow::Begin(&containers[selectedIdx], true);
         }
-//        ImGui::EndChild(); // End right panel
 
         ImGui::Columns(1); // Reset columns before finishing
     }

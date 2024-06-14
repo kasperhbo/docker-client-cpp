@@ -9,10 +9,14 @@
 
 namespace KBDocker::Containers {
     void ContainerManager::Refresh() {
+        std::cout << "Refreshing containers" << std::endl;
+
         m_Containers = FetchContainersFromAPI();
     }
     void ContainerManager::Start() {
         if (m_Running.load()) return;
+
+        std::cout << "Starting container manager" << std::endl;
 
         m_Running.store(true);
         m_Thread = std::thread([this]() {
@@ -25,6 +29,8 @@ namespace KBDocker::Containers {
 
     void ContainerManager::Stop() {
         if (!m_Running.load()) return;
+
+        std::cout << "Stopping container manager" << std::endl;
 
         m_Running.store(false);
         if (m_Thread.joinable()) {
