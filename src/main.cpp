@@ -4,6 +4,7 @@
 
 #include <VulkanWindow.h>
 #include <Containers/Container.h>
+#include <Fonts/FontManager.h>
 #include <Containers/UI/ContainerListWindow.h>
 #include "Containers/ContainerManager.h"
 
@@ -15,6 +16,7 @@ int main() {
                                                                                        ImVec4(0.45f, 0.55f, 0.60f,
                                                                                               1.00f));
     KBUI::VulkanWindow mainWindow(properties);
+    KBUI::Fonts::FontManager::LoadDefaultFont(14.0f);
     KBDocker::Containers::ContainerManager containerManager("localhost", 1);
 
 
